@@ -16,8 +16,13 @@ export default observer(function TodoScreen() {
   }
 
   const renderTodoItem = ({item}: any) => (
-    <View style={{ marginBottom: 5, borderWidth: 1, borderColor: '#000', padding: 12, borderRadius: 50}}>
+    <View style={styles.todoStyle}>
       <Text>{item.title}</Text>
+      <View style={styles.deleteBtn}>
+        <TouchableOpacity onPress={()=> todo.removeTodo(item.id)}>
+          <Text>remove</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 
@@ -76,4 +81,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
+  todoStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+    borderWidth: 1, 
+    borderColor: '#000', 
+    padding: 12, 
+    borderRadius: 50
+  },
+  deleteBtn: {
+    justifyContent: 'center',
+    alignContent: 'center'
+  }
 })

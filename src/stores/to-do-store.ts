@@ -1,4 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { makeAutoObservable } from "mobx"
+import { makePersistable } from "mobx-persist-store"
 
 export class TodoStore {
   todos: Todo[] = []
@@ -6,6 +8,12 @@ export class TodoStore {
 
   constructor() {
     makeAutoObservable(this)
+
+    makePersistable(this, {
+      name: 'TodoStore',
+      properties: ['todos'],
+      storage: AsyncStorage
+    })
   }
 
   addTodo (title: string){
@@ -22,7 +30,22 @@ export class TodoStore {
   }
 
   removeTodo(id: string){
-    this.todos.filter(todo => todo.id !== id)
+    this.todos = this.todos.filter(todo => todo.id !== id)
+  }
+
+  updateTodo(id: string, tile: string){
+    const foundTodo = this.todos.find(t => t.id == id)
+    if(foundTodo){
+      foundTodo.title = tile
+    }
+  }
+
+  clearCompleted() {
+    this.todos = this.todos.filter(t => !t.completed)
+  }
+
+  async hydrate(): Promise<void> {
+    // makePersistable handles hydration automatically
   }
   
 }
