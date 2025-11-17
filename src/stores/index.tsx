@@ -1,0 +1,30 @@
+
+import React from "react";
+import { TodoStore } from "./to-do-store";
+
+
+class Stores {
+  todo = new TodoStore()
+}
+
+export const stores = new Stores();
+
+const storeContext = React.createContext<Stores>(stores);
+
+export const StoresProvider = ({ children }: any) => (
+    <storeContext.Provider value={stores}>{children}</storeContext.Provider>
+);
+
+export const useStores = (): Stores => React.useContext(storeContext);
+
+export const hydrateStores = async (): Promise<void> => {
+    for (const key in stores) {
+      if (Object.prototype.hasOwnProperty.call(stores, key)) {
+        const s = (stores as any)[key] as any;
+  
+        if (s.hydrate) {
+          await s.hydrate();
+        }
+      }
+    }
+  };
